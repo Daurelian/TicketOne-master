@@ -3,9 +3,40 @@ import entities.Utente;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
-public class Main {
+public class ConnectionHandler {
+
+    public static ConnectionHandler instance;
+
+    public static final String DB_URL_Prefix="jdbc:postgresql://";
+    public static final String DB_URL_HOST="localhost"; //:
+    public static final String DB_URL_PORT="5432"; // /
+    public static final String DB_URL_NAME="teatro";
+    public static final String DB_USER="postgres";
+    public static final String DB_PASSWORD="gatti";
+
+    private final Properties databaseProps = new Properties();
+
+    public String getDatabaseUrl(){
+        return DB_URL_Prefix+DB_URL_HOST+":"+DB_URL_PORT+"/"+DB_URL_NAME;
+    }
+    private ConnectionHandler()
+    {
+        this.databaseProps.setProperty("username", DB_USER);
+        this.databaseProps.setProperty("password", DB_PASSWORD);
+
+    }
+    public ConnectionHandler getConnectionHandler(){
+        if(instance==null){
+            instance= new ConnectionHandler();
+        }
+        return instance;
+    }
+
     public static void main(String[] args) {
+
+
     List<Utente> utenti= new ArrayList<>();
         try {
             Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/teatro", "postgres", "gatti");
